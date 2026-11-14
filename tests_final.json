@@ -1,0 +1,549 @@
+[
+  {
+    "name": "S01: Валидация R01 - нормальный вход",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "S02: Валидация R01 - выход за границы (humidity=-1)",
+    "steps": [
+      {
+        "input": {
+          "humidity": -1,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S03: Валидация R01 - неверный тип (humidity=null)",
+    "steps": [
+      {
+        "input": {
+          "humidity": null,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S04: Валидация R01 - неверный тип (budget=2.5)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 2.5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S05: Устаревший снимок R02 (age=31)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 31,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S06: Граница снимка R02 (age=30 - еще валиден)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 30,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "S07: Блокировка R07 (дождь)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": true,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S08: Блокировка R08 (мало воды tank=9.9)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 9.9,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S09: Граница блокировки R08 (tank=10)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 10,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "S10: Гистерезис R04 - вентиляция (включение)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 31,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "S11: Гистерезис R04 - вентиляция (удержание)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 31,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      },
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 28,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "S12: Гистерезис R04 - вентиляция (выключение)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 31,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      },
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 26,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S13: Авария R03 - latch (защелкивание)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 31,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      },
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S14: Сброс аварии R03 (reset=true)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 31,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      },
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": true
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "S15: Конфликт бюджета R09 (budget=2, нужны оба)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 32,
+          "age": 0,
+          "tank": 50,
+          "budget": 2,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "S16: Конфликт бюджета R09 (budget=3, нужны оба)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 32,
+          "age": 0,
+          "tank": 50,
+          "budget": 3,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "S17: Граница гистерезиса R05 (humidity=35)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 35,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S18: Граница гистерезиса R05 (humidity=45)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 45,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S19: Граница гистерезиса R04 (temp=30)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 30,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "S20: Граница холода R06 (temp=3)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 3,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "S21: Гистерезис R05 - выключение ровно на 45 (для убийства M2)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      },
+      {
+        "input": {
+          "humidity": 45,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  }
+]

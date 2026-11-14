@@ -1,0 +1,37 @@
+[
+  {
+    "name": "D01: Версия 2.1 - включение при humidity=39.9",
+    "steps": [
+      {
+        "input": {"humidity": 39.9, "temp": 20, "age": 0, "tank": 50, "budget": 5, "rain": false, "reset": false},
+        "expected": {"pump": true, "vent": false, "fault": false, "used": 2}
+      }
+    ]
+  },
+  {
+    "name": "D02: Версия 2.1 - граница ровно 40 (должен сохранить предыдущее)",
+    "steps": [
+      {
+        "input": {"humidity": 20, "temp": 20, "age": 0, "tank": 50, "budget": 5, "rain": false, "reset": false},
+        "expected": {"pump": true, "vent": false, "fault": false, "used": 2}
+      },
+      {
+        "input": {"humidity": 40, "temp": 20, "age": 0, "tank": 50, "budget": 5, "rain": false, "reset": false},
+        "expected": {"pump": true, "vent": false, "fault": false, "used": 2}
+      }
+    ]
+  },
+  {
+    "name": "D03: Версия 2.1 - проверка, что выключение на 45 осталось прежним",
+    "steps": [
+      {
+        "input": {"humidity": 20, "temp": 20, "age": 0, "tank": 50, "budget": 5, "rain": false, "reset": false},
+        "expected": {"pump": true, "vent": false, "fault": false, "used": 2}
+      },
+      {
+        "input": {"humidity": 45, "temp": 20, "age": 0, "tank": 50, "budget": 5, "rain": false, "reset": false},
+        "expected": {"pump": false, "vent": false, "fault": false, "used": 0}
+      }
+    ]
+  }
+]
